@@ -260,7 +260,7 @@ margin: 10px;
   transform: rotateY(180deg);
 } 
 
-@media (max-width: 1000px){
+@media (max-width: 1440px){
   .Cards{
     display: grid;
     grid-template-columns: repeat(1, 1fr);
@@ -272,7 +272,7 @@ margin: 10px;
   }
 }
 
-@media (min-width: 1000px){
+@media (min-width: 1440px){
   .Cards{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
