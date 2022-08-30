@@ -1,15 +1,16 @@
 :root{
   --var_example: x;
   --default_width: 1280px;
-  --page_back: #3E363F;
-  --nav_back: #B8B42D;
-  --nav_border: #DD403A;
-  --burg_color: #697A21;
-  --button_color: #697A21;
-  --button_border: #DD403A;
-  --card-flip: #B8B42D;
-  --light_font: #FFFCE8;
-  --footer_color: #B8B42D;
+  --page_back: #EDDDD4;
+  --nav_back: #283D3B;
+  --nav_border: #C44536;
+  --burg_color: #772E25;
+  --button_color: #772E25;
+  --button_border: #C44536;
+  --card-flip: #197278;
+  --light-font: #EDDDD4;
+  --dark_font: #283D3B;
+  --footer_color: #283D3B;
 }
 
 *{
@@ -17,10 +18,11 @@
   padding: 0; /*same as top*/
   box-sizing: border-box;
   text-decoration: none;
+
 }
 
-h1{
-  color: var(--light_font)
+.logo a h1{
+  color: var(--light-font);
 }
 
 p{
@@ -29,6 +31,7 @@ p{
 
 body {
   background-color: var(--page_back);
+  color: var(--dark_font)
 }
 
 nav{
@@ -51,9 +54,14 @@ nav{
   border-bottom: 3px solid var(--nav_border);
 }
 
+.logo {
+  color: var(--light-font);
+}
+
 .menu{
   display: flex;
   justify-content: space-around;
+  background-color: var(--dark_font);
   /*display: none;
   flex: 1 1 0%;
   justify-content: flex-end;
@@ -61,7 +69,8 @@ nav{
 }
 
 .menu a{
-  color: var(--light_font);
+  color: var(--light-font);
+  background-color: var(--dark_font);
   margin: 0 16px;
   font-weight: 600;
   text-decoration: none;
@@ -90,8 +99,8 @@ nav{
   height: 4px;
   margin-bottom: 5px;
   position: relative;
+  background-color: var(--nav_border);
 
-  background-color: var(--burg_color);
   border-radius: 6px;
   z-index: 1;
 
@@ -132,7 +141,7 @@ nav{
 }
 
 .link:hover{
-  background-color: var(--button_color);
+  background-color: var(--dark_font);
   border: 3px solid var(--button_border);
 }
 
@@ -143,6 +152,7 @@ nav{
   }
   .menu{
     display: block;
+    background-color: var(--dark_font);
   }
 }
 
@@ -214,11 +224,15 @@ nav{
 }
 
 
+h3 {
+  color: var(--button_color);
+}
+
 /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
 .flip-card {
 background-color: transparent;
 width: 300px;
-height: 200px;
+height: 250px;
 perspective: 1000px; /* Remove this if you don't want the 3D effect */
 margin: 10px;
 }
@@ -245,20 +259,27 @@ margin: 10px;
   height: 100%;
   -webkit-backface-visibility: hidden; /* Safari */
   backface-visibility: hidden;
+  border-radius: 15px;
 }
 
 /* Style the front side (fallback if image is missing) */
 .flip-card-front {
   background-color: #bbb;
-  color: black;
+}
+
+.flip-card-front h3{
+  color: var(--dark_font);
 }
 
 /* Style the back side */
 .flip-card-back {
-  background-color: var(--card-flip);
-  color: var(--light_font);
+  background-color: var(--dark_font);
   transform: rotateY(180deg);
 } 
+
+.flip-card-back p{
+  color: var(--light-font);
+}
 
 @media (max-width: 1440px){
   .Cards{
@@ -361,14 +382,13 @@ margin: 10px;
 
 .down_button h1{
   font-size: 32px;
-  color: var(--light_font);
+  color: var(--light-font);
   position: relative;
   top: 29px;
 }
 
 .down_button:hover{
-  background-color: var(--button_color);
-  border: 3px solid var(--button_border);
+  border: 5px solid var(--button_border);
   cursor: pointer;
 }
 
@@ -385,5 +405,28 @@ margin: 10px;
   padding:100px;
   text-align: center;
   margin: auto;
+  color: var(--light-font);
   background-color: var(--footer_color);
+}
+
+@media (max-width: 768px){
+  #ButtonLinks img{
+    height: 50px;
+    margin: 10px;
+  }
+  
+  #ButtonLinks img:hover{
+    height: 55px;
+  }
+}
+
+@media  (min-width: 768px){
+  #ButtonLinks img{
+    height: 80px;
+    margin: 10px;
+  }
+  
+  #ButtonLinks img:hover{
+    height: 85px;
+  }
 }
