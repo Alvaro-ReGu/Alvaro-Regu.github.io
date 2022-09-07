@@ -18,7 +18,7 @@
   padding: 0; /*same as top*/
   box-sizing: border-box;
   text-decoration: none;
-
+  font-family: 'IBM Plex Mono', monospace;
 }
 
 .logo a h1{
@@ -228,6 +228,28 @@ h3 {
   color: var(--button_color);
 }
 
+.small_down_button{
+  margin: auto;
+  background-color: var(--light-font);
+  border-radius: 100px;
+  max-width: 25vw;
+  min-width: 150px;
+  height: 50px;
+  text-decoration: none;
+}
+
+.small_down_button h1{
+  font-size: 16px;
+  color: var(--dark_font);
+  position: relative;
+  top: 11px;
+}
+
+.small_down_button:hover{
+  border: 5px solid var(--button_border);
+  cursor: pointer;
+}
+
 /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
 .flip-card {
 background-color: transparent;
@@ -278,6 +300,10 @@ margin: 10px;
 } 
 
 .flip-card-back p{
+  color: var(--light-font);
+}
+
+.flip-card-back h3{
   color: var(--light-font);
 }
 
