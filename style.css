@@ -29,6 +29,10 @@ p{
   color: var(--light_font)
 }
 
+h1 {
+  font-size: 32px;
+}
+
 body {
   background-color: var(--page_back);
   color: var(--dark_font)
@@ -204,9 +208,13 @@ nav{
 
 
 #Intro{
-  padding: 100px;
+  padding: 14vh;
   text-align: center;
   margin: auto;  /*centers div horizontal*/
+}
+
+#Intro p{
+  font-size: 24px;
 }
 
 
@@ -218,7 +226,7 @@ nav{
 
 
 #Projects{
-  padding:100px;
+  padding: 10vh;
   text-align: center;
   margin: auto;
 }
@@ -342,7 +350,7 @@ margin: 10px;
 
 
 #Skills{
-  padding:100px;
+  padding: 10vh;
   text-align: center;
   margin: auto;
 }
