@@ -33,6 +33,7 @@ h1 {
   font-size: 32px;
 }
 
+
 body {
   background-color: var(--page_back);
   color: var(--dark_font)
@@ -208,7 +209,9 @@ nav{
 
 
 #Intro{
-  padding: 14vh;
+  padding-top: 14vh;
+  padding-left: 5vw;
+  padding-right: 5vw;
   text-align: center;
   margin: auto;  /*centers div horizontal*/
 }
@@ -226,7 +229,7 @@ nav{
 
 
 #Projects{
-  padding: 10vh;
+  padding-top: 10vh;
   text-align: center;
   margin: auto;
 }
@@ -309,6 +312,20 @@ margin: 10px;
 
 .flip-card-back p{
   color: var(--light-font);
+  margin: auto;
+  width: 90%;
+}
+
+.Proj_1 p{
+  padding-top: 15px;
+}
+
+.Proj_2 p{
+  padding-top: 15px;
+}
+
+.Proj_3 p{
+  padding-top: 40px;
 }
 
 .flip-card-back h3{
@@ -350,7 +367,7 @@ margin: 10px;
 
 
 #Skills{
-  padding: 10vh;
+  padding-top: 10vh;
   text-align: center;
   margin: auto;
 }
@@ -392,6 +409,41 @@ margin: 10px;
 
 
 
+#ClassTable{
+  padding-top: 10vh;
+  text-align: center;
+  margin: auto;
+  color:#EDDDD4;
+}
+
+#ClassTable h1{
+  color:#283D3B;
+  padding-bottom: 10px;;
+}
+
+.Table{
+  margin: auto;
+  
+  color: #283D3B;
+  border:1px solid #EDDDD4;
+}
+
+td{
+  background-color: #283D3B;
+  border-collapse: separate;
+  border-radius: 20px;
+
+  padding: 10px;
+  text-align: left;
+  justify-content: center;
+  border:1px solid #EDDDD4;
+  color:#EDDDD4;
+}
+
+td:hover{
+  border: 5px solid var(--button_border);
+  cursor: default;
+}
 
 
 
@@ -399,7 +451,8 @@ margin: 10px;
 
 
 #Resume{
-  padding:100px;
+  padding-bottom: 10vh;
+  padding-top: 10vh;
   text-align: center;
   margin: auto;
 }
@@ -436,7 +489,8 @@ margin: 10px;
 
 
 #Contact{
-  padding:100px;
+  padding-top: 5vh;;
+  padding-bottom: 5vh;
   text-align: center;
   margin: auto;
   color: var(--light-font);
