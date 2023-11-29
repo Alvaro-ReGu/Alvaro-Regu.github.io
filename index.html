@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,800' rel='stylesheet' type='text/css'>
+</head>
+
+<style type="text/css">
+
+body {
+	  font-family: 'Open Sans';
+    font-size: 100%;
+}
+
+h1 {
+    position:fixed;
+    display: inline;
+    font-family: 'Open Sans';
+    font-size: 200%;
+    padding-left: 10px;
+    font-weight: 300;
+    margin-top:15px;
+}
+
+#sliderContainer {
+    position:fixed;
+    display: inline;
+    font-family: 'Open Sans';
+    font-size: 150%;
+    padding-left: 10px;
+    font-weight: 300;
+    margin-top:15px;
+}
+
+.byline {
+    top:50px;
+    padding-left: 15px;
+    position: fixed;
+    display: inline;
+    font-family: 'Open Sans';
+    font-size: 100%;
+}
+
+.home {
+    position: fixed;
+    right:0;
+    top:0;
+    text-align: right;
+    padding-right:15px;
+    padding-top:5px;
+}
+
+.station {
+    stroke-width: 3;
+    opacity: 0.75;
+}
+
+.station:hover {
+    stroke-width: 8px;
+    opacity: 1.0;
+}
+
+.train-inset {
+    position:fixed;
+    left:40px;
+    bottom:40px;
+    border:1px solid;
+    border-color: black;
+    box-shadow: 4px 4px 20px #888888;
+    background-color: white;
+}
+
+#tooltip {
+    position: fixed;
+    width: auto;
+    height: auto;
+    padding: 8px;
+    background-color: white;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    z-index: 1;
+}
+
+#tooltip.hidden {
+    display: none;
+}
+
+#tooltip p {
+    margin-left: 10px;
+    margin-right:5px;
+    font-family: 'Open Sans';
+    font-weight: 400;
+    font-size: 12px;
+    text-align: left;
+    margin-top: 3px;
+margin-bottom: 3px;
+}
+
+#graph {
+    position: fixed;
+    top: 200px; /* Adjust as needed */
+    left: 50px; /* Adjust as needed */
+    width: 500px; /* Adjust as needed */
+    height: 300px; /* Adjust as needed */
+    border: 1px solid black;
+    background-color: white;
+    display: none; /* Hidden initially */
+}
+
+</style>
+
+<body>
+  <img src="thumbnail.png" style="display:none;">
+
+  <p class="home"><span id="clear"><a href="#" onclick="return false;">Clear</a></span></p>
+	<h1>CTA's Ridership 1990-2023</h1>
+
+  <br>
+  <br>
+  <br>
+
+  <div id="sliderContainer">
+    <input type="range" min="1999" max="2023" value="2023" id="yearSlider">
+    <p>Year: <span id="sliderValue">2023</span></p>
+  </div>
+
+  <div id="graph"></div>
+    
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    
+    <div class="train-inset">
+      <span style="position:fixed; font-size: 300%; font-weight: lighter; opacity: .1; margin:auto; z-index:-1;">The Loop</span></div>
+    
+    <div id="tooltip" class="hidden">
+          <strong id="station-header">CTA Station:</strong>
+       <span id="value">Station</span>
+        </p>
+    </div>
+    
+    
+    <script>
+        window.onresize = function(){ location.reload(); };
+
+        var insetWidth = 240;
+        var insetHeight = 280;
+
+        var width = window.innerWidth - 10;
+        var height = window.innerHeight - 50; 
+
+        var svg_body = d3.select("body").append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .style({'margin-top': 30,'margin-bottom': 20, 'stroke': 'red', 'stroke-width': 6, 'fill':'none'});
+
+        var svg_inset = d3.select(".train-inset").append("svg")
+                    .attr("width", insetWidth)
+                    .attr("height", insetHeight)
+                    .style({'stroke': 'red', 'stroke-width': 6, 'fill':'none'});
+
+        /* Create projections and path elements for main & inset maps */
+
+        var projection = d3.geo.albers().scale(1).translate([0,0]);
+
+        var path = d3.geo.path()
+                     .projection(projection);
+
+        var projection_inset = d3.geo.albers().scale(1).translate([0,0]);
+
+        var path_inset = d3.geo.path()
+                     .projection(projection_inset);
+
+        // Function to create a line graph
+    function createLineGraph(stationName, stationData) {
+      // Clear any existing graph
+      d3.select("#graph").selectAll("*").remove();
+
+      // Set the dimensions and margins of the graph
+      var margin = {top: 10, right: 30, bottom: 30, left: 60},
+          width = 460 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
+
+      // Append the svg object to the body of the page
+      var svg = d3.select("#graph")
+        .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      // Add X axis
+      var x = d3.scale.linear()
+        .domain([1999, 2023])
+        .range([ 0, width ]);
+      svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.svg.axis().scale(x).orient("bottom"));
+
+      // Add Y axis
+      var y = d3.scale.linear()
+        .domain([0, d3.max(stationData, function(d) { return +d.TOTAL_RIDES; })])
+        .range([ height, 0 ]);
+      svg.append("g")
+        .call(d3.svg.axis().scale(y).orient("left"));
+
+      // Add the line
+      svg.append("path")
+        .datum(stationData)
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.svg.line()
+          .x(function(d) { return x(d.YEAR) })
+          .y(function(d) { return y(d.TOTAL_RIDES) })
+        )
+    }
+
+        /* load the data document - keep all functions that require data nested in this block, asynchronous loading */
+        d3.json("ctajson.json", function(error, cta) {
+          d3.json("CTA_Average_Rail_Station_Ridership_1999_2023_0.json", function(error, ridershipData) {
+              // Projection and scaling settings
+              var b = path.bounds(cta),
+                  s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+                  t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+
+              projection.scale(s).translate(t); 
+
+              // Draw lines (routes)
+              svg_body.selectAll("path")
+                  .data(cta.features.filter(function(d) { return d["geometry"]["type"] == "LineString" }))
+                  .enter()
+                  .append("path")
+                  .attr("d", path)
+                  .style("stroke", function(d) { return "#" + d.properties.route_color });
+
+              var activeStation = null; // To keep track of the currently active station
+
+              // Draw stations
+              var stations = svg_body.selectAll("path")
+                  .data(cta.features.filter(function(d) { return d["geometry"]["type"] == "Point" }))
+                  .enter()
+                  .append("path")
+                  .attr("d", path)
+                  .attr('class', 'station')
+                  .style("fill", function(d) { return d.properties.route_id })
+                  .style("stroke", function(d) { return d.properties.route_id });
+
+              // Click event for stations
+              stations.on("click", function(d) {
+                  if (activeStation) {
+                      d3.select(activeStation)
+                          .style("fill", function(d) { return d.properties.route_id })
+                          .style("stroke", function(d) { return d.properties.route_id })
+                          .style("stroke-width", "1px");
+                  }
+
+                  d3.select(this)
+                      .style("fill", "red")
+                      .style("stroke", "black")
+                      .style("stroke-width", "2px");
+
+                  activeStation = this;
+
+                  var selectedYear = d3.select("#yearSlider").property("value");
+                  var stationName = d.properties.name; 
+                  var stationData = ridershipData.filter(function(rd) {
+                      return rd.NAME === stationName && rd.YEAR == selectedYear;
+                  });
+
+                  var totalRides = stationData.length > 0 ? stationData[0].TOTAL_RIDES : "No data";
+                  var dailyAvgRides = stationData.length > 0 ? stationData[0].DAILY_AVG_RIDES : "No data";
+
+                  d3.select("#tooltip")
+                      .style("left", d3.mouse(this)[0] + 20 + "px")
+                      .style("top", d3.mouse(this)[1] - 20 + "px")
+                      .select("#value")
+                      .html("Station: " + stationName + "<br>Total Rides: " + totalRides + "<br>Daily Avg Rides: " + dailyAvgRides);
+
+                  d3.select("#tooltip").classed("hidden", false);
+              });
+
+              // Slider for year selection
+              var yearSlider = d3.select("#yearSlider");
+              var sliderValueDisplay = d3.select("#sliderValue");
+
+              yearSlider.on("input", function() {
+                  var selectedYear = this.value;
+                  sliderValueDisplay.text(selectedYear);
+
+                  // Optional: Add logic to update the map based on the selected year
+                  // For example, you could update the colors of the stations based on ridership data for the selected year
+              });
+          });
+      });
+
+        d3.json("cta_inset.json", function(error, cta) {
+          d3.json("CTA_Average_Rail_Station_Ridership_1999_2023_0.json", function(error, ridershipData) {
+              // Set up the projection for the inset map
+              projection_inset.scale(880300).translate([-101910, 53620]);
+
+              // Draw the lines for the inset map
+              svg_inset.selectAll("path_inset")
+                  .data(cta.features.filter(function(d) { return d["geometry"]["type"] == "LineString" }))
+                  .enter()
+                  .append("path")
+                  .attr("d", path_inset)
+                  .style("stroke", function(d) { return "#" + d.properties.route_color });
+
+              var activeStation = null; // To keep track of the currently active station
+
+              // Draw the stations for the inset map
+              var stationsInset = svg_inset.selectAll("path_inset")
+                  .data(cta.features.filter(function(d) { return d["geometry"]["type"] == "Point" }))
+                  .enter()
+                  .append("path")
+                  .attr("d", path_inset)
+                  .attr('class', 'station')
+                  .style("fill", function(d) { return d.properties.route_id })
+                  .style("stroke", function(d) { return d.properties.route_id });
+
+              stationsInset.on("click", function(d) {
+                  if (activeStation) {
+                      // Reset the style of the previously active station
+                      d3.select(activeStation)
+                          .style("fill", function(d) { return d.properties.route_id })
+                          .style("stroke", function(d) { return d.properties.route_id })
+                          .style("stroke-width", "1px"); // Reset to the original stroke width
+                  }
+
+                  // Update the style of the newly clicked station
+                  d3.select(this)
+                      .style("fill", "red")
+                      .style("stroke", "black")
+                      .style("stroke-width", "2px");
+
+                  activeStation = this; // Update the currently active station
+
+                  var selectedYear = d3.select("#yearSlider").property("value");
+                  var stationName = d.properties.name; // Replace 'name' with your actual station name property
+                  var stationData = ridershipData.filter(function(rd) {
+                      return rd.NAME === stationName && rd.YEAR == selectedYear;
+                  });
+
+                  var totalRides = stationData.length > 0 ? stationData[0].TOTAL_RIDES : "No data";
+                  var dailyAvgRides = stationData.length > 0 ? stationData[0].DAILY_AVG_RIDES : "No data";
+
+                  // Update the tooltip with ridership data
+                  var location = d3.mouse(this);
+                  var xPosition = location[0];
+                  var yPosition = location[1];
+                  var y_bottom = 335 - yPosition;
+                  var x_inset = 55 + xPosition;
+
+                  d3.select("#tooltip")
+                      .style("left", x_inset + "px")     
+                      .style("bottom", y_bottom + "px")
+                      .style("top", "inherit")
+                      .select("#value")
+                      .html("Station: " + stationName + "<br>Total Rides: " + totalRides + "<br>Daily Avg Rides: " + dailyAvgRides);
+
+                  d3.select("#tooltip").classed("hidden", false);
+              });
+          });
+      });
+
+
+        
+        d3.select("#clear").on('click',function(){
+            d3.select("#tooltip").classed("hidden", true);
+        });
+    
+    </script>
+
+</body>
+</html>
