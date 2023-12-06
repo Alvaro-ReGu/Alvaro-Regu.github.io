@@ -242,18 +242,18 @@
                             var stationName = d.properties.name;
                             if (selectedStations[stationName]) {
                                 delete selectedStations[stationName];
+                                d3.select(this).attr("fill", "none");
                             } else if (Object.keys(selectedStations).length < maxStations) {
                                 var stationData = ridershipData.filter(function (rd) { return rd.NAME === stationName; });
                                 selectedStations[stationName] = stationData;
+                                d3.select(this).attr("fill", "black");
                             }
 
                             if (Object.keys(selectedStations).length > 0) {
                                 updateGraphWithSelectedStations();
-                                d3.select("#graph").style("display", "block");
-                                d3.select(this).attr("fill", "black");
+                                d3.select("#graph").style("display", "block");;
                             } else {
                                 d3.select("#graph").style("display", "none");
-                                d3.select(this).attr("fill", "none");
                             }
                         });
                 });
@@ -304,19 +304,19 @@
                     .on("click", function (d) {
                         var stationName = d.properties.name;
                         if (selectedStations[stationName]) {
+                            d3.select(this).attr("fill", "none");
                             delete selectedStations[stationName];
                         } else if (Object.keys(selectedStations).length < maxStations) {
                             var stationData = ridershipData.filter(function (rd) { return rd.NAME === stationName; });
+                            d3.select(this).attr("fill", "black");
                             selectedStations[stationName] = stationData;
                         }
 
                         if (Object.keys(selectedStations).length > 0) {
                             updateGraphWithSelectedStations();
                             d3.select("#graph").style("display", "block");
-                            d3.select(this).attr("fill", "black");
                         } else {
                             d3.select("#graph").style("display", "none");
-                            d3.select(this).attr("fill", "none");
                         }
                     });
             });
