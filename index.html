@@ -250,8 +250,10 @@
                             if (Object.keys(selectedStations).length > 0) {
                                 updateGraphWithSelectedStations();
                                 d3.select("#graph").style("display", "block");
+                                d3.select(this).attr("fill", "black");
                             } else {
                                 d3.select("#graph").style("display", "none");
+                                d3.select(this).attr("fill", "none");
                             }
                         });
                 });
@@ -311,8 +313,10 @@
                         if (Object.keys(selectedStations).length > 0) {
                             updateGraphWithSelectedStations();
                             d3.select("#graph").style("display", "block");
+                            d3.select(this).attr("fill", "black");
                         } else {
                             d3.select("#graph").style("display", "none");
+                            d3.select(this).attr("fill", "none");
                         }
                     });
             });
@@ -444,6 +448,7 @@
         d3.select("#clear").on('click', function () {
             d3.select("#tooltip").classed("hidden", true);
             d3.select("#graph").style("display", "none");
+            d3.selectAll(".station").attr("fill", "none");
             selectedStations = {}; // Reset selected stations
         });
 
